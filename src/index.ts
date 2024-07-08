@@ -40,9 +40,17 @@ const uploadVideo = async (video) => {
 
 app.post("/create-timelapse", async (req, res) => {
   const { imageUrls } = req.body;
-  const tempDir = path.join("/temp");
-  const outputPath = path.join("/temp", "timelapse.mp4");
+  const outputDir = path.join(__dirname, "output");
+  const outputPath = path.join(outputDir, "timelapse.mp4");
+  const tempDir = path.join(__dirname, "temp");
 
+  //   console.log("imageUrls", imageUrls, outputPath, tempDir);
+
+  //   res.send("OK");
+
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
   }
