@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: visualize-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: FFMPEG_PATH
+        value: /usr/bin/ffmpeg
+    buildFilter:
+      paths:
+        - package.json
+        - src/**
