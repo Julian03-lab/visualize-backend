@@ -17,8 +17,8 @@ app.use("/api/users", usersRouter);
 app.use("/api/objectives", objectivesRouter);
 
 // Configura tu tarea cron
-cron.schedule("* */4 * * *", async () => {
-  console.log("Ejecutando una tarea a la hora: ", new Date().toISOString());
+cron.schedule("* * * * *", async (now) => {
+  console.log("Ejecutando una tarea a la hora: ", now);
 });
 
 const PORT = process.env.PORT || 3000;
