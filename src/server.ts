@@ -3,11 +3,13 @@ import dotenv from "dotenv";
 import timelapseRoutes from "./routes/timelapse.routes";
 import usersRouter from "./routes/users.routes";
 import objectivesRouter from "./routes/objectives.routes";
+import { verifyFirebaseToken } from "./middleware/verifyFirebaseToken";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(verifyFirebaseToken);
 
 app.use("/api/create-timelapse", timelapseRoutes);
 app.use("/api/users", usersRouter);
