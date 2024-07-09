@@ -13,6 +13,12 @@ export const deleteObjective = async (userId: string, objectiveId: string) => {
         objetiveRef.collection("files")
       );
 
+      const objectiveSnapshot = await transaction.get(objetiveRef);
+
+      if (!objectiveSnapshot.exists) {
+        throw new Error("El objetivo no existe.");
+      }
+
       filesSnapshot.forEach((file) => {
         transaction.delete(file.ref);
       });
@@ -21,6 +27,6 @@ export const deleteObjective = async (userId: string, objectiveId: string) => {
     });
     console.log(`Objetivo ${objectiveId} y sus archivos eliminados con éxito.`);
   } catch (error) {
-    console.error("Error al eliminar el objetivo y sus archivos:", error);
+    throw new Error("Error al eliminar el objetivo y sus archivos");
   }
 };

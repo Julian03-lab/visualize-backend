@@ -1,4 +1,4 @@
-import { type Request, type Response } from "express";
+import { type Response } from "express";
 import * as objectivesService from "../services/objectivesServices";
 import { IAuthenticatedRequest } from "../types/types";
 
@@ -10,8 +10,6 @@ export const deleteObjective = async (
     const { objectiveId } = req.params;
     const userId = req.user.uid;
 
-    console.log(userId, objectiveId);
-
     await objectivesService.deleteObjective(userId, objectiveId);
 
     res.json({
@@ -20,6 +18,6 @@ export const deleteObjective = async (
     });
   } catch (error) {
     console.error("Error timelapseController: ", error);
-    res.status(500).send("Error al procesar las imágenes");
+    res.status(500).json({ error: "Error al eliminar el objetivo" });
   }
 };
