@@ -4,6 +4,7 @@ import timelapseRoutes from "./routes/timelapse.routes";
 import usersRouter from "./routes/users.routes";
 import objectivesRouter from "./routes/objectives.routes";
 import { verifyFirebaseToken } from "./middleware/verifyFirebaseToken";
+import cron from "node-cron";
 
 dotenv.config();
 
@@ -14,6 +15,11 @@ app.use(verifyFirebaseToken);
 app.use("/api/create-timelapse", timelapseRoutes);
 app.use("/api/users", usersRouter);
 app.use("/api/objectives", objectivesRouter);
+
+// Configura tu tarea cron
+cron.schedule("* */4 * * *", async () => {
+  console.log("Ejecutando una tarea a la hora: ", new Date().toISOString());
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
