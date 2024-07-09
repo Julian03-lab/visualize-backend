@@ -1,3 +1,5 @@
+import { type Request } from "express";
+
 export type IImageUrls = string[];
 
 export interface ICreateTimelapseRequest {
@@ -7,4 +9,10 @@ export interface ICreateTimelapseRequest {
 export interface ITimelapseResult {
   message: string;
   url: string;
+}
+
+export interface IAuthenticatedRequest extends Request {
+  user?: {
+    uid: string;
+  };
 }

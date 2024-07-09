@@ -3,6 +3,6 @@ import * as timelapseController from "../controllers/timelapseController";
 
 const timelapseRouter = Router();
 
-timelapseRouter.post("/create-timelapse", timelapseController.createTimelapse);
+timelapseRouter.post("/", timelapseController.createTimelapse);
 
 export default timelapseRouter;
