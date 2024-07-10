@@ -16,3 +16,35 @@ export interface IAuthenticatedRequest extends Request {
     uid: string;
   };
 }
+
+export interface IUser {
+  userId: string;
+  displayName: string;
+  email: string;
+  photoURL: string;
+  country?: string;
+  gender?: string;
+  notificationTime?: string | null;
+  birthday?: string;
+}
+
+export interface IObjective {
+  objectiveId: string;
+  title: string;
+  date: string;
+  completed: boolean;
+  createdAt: string;
+  endingDate: string;
+  totalDays: number;
+  startingDate: string;
+  lastPhotoDate: string | null;
+  principal: boolean;
+  viewed?: boolean;
+}
+
+export interface IFile {
+  fileId: string;
+  url?: string;
+  createdAt: string;
+  empty?: boolean;
+}
