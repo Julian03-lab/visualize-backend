@@ -26,6 +26,7 @@ export interface IUser {
   gender?: string;
   notificationTime?: string | null;
   birthday?: string;
+  userTimeZone?: string;
 }
 
 export interface IObjective {

@@ -3,8 +3,12 @@ import { IFile, IObjective } from "../types/types";
 import { getAllUsers } from "./usersService";
 import dayjs from "dayjs";
 
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
 
 const getAllObjectivesFromUser = async (userId: string) => {
@@ -82,43 +86,55 @@ export const checkLastFile = async () => {
   const allUsers = await getAllUsers();
 
   for (const user of allUsers) {
-    const objectives = await getAllObjectivesFromUser(user.userId);
+    const userTimeZone = user.userTimeZone || "America/New_York";
 
-    if (objectives) {
-      //   console.log(`Objetivos del usuario ${user.email}: `, objectives);
+    const userLocalTime = dayjs().tz(userTimeZone);
 
-      for (const objective of objectives) {
-        const files = await getAllFilesFromObjective(
-          user.userId,
-          objective.objectiveId
-        );
+    if (userLocalTime.hour() === 23) {
+      console.log(
+        `Ejecutando una inspeccion de los archivos a la hora: ${userLocalTime.format(
+          "DD/MM/YYYY HH:mm"
+        )}`
+      );
 
-        if (files) {
-          const lastFile = files[0];
+      const objectives = await getAllObjectivesFromUser(user.userId);
 
-          const lastFileDate = dayjs(lastFile.createdAt);
+      if (objectives) {
+        //   console.log(`Objetivos del usuario ${user.email}: `, objectives);
 
-          const dateToCompare = dayjs().subtract(1, "day");
+        for (const objective of objectives) {
+          const files = await getAllFilesFromObjective(
+            user.userId,
+            objective.objectiveId
+          );
 
-          if (dateToCompare.isSame(lastFileDate, "day")) {
-            // console.log(
-            //   `El objetivo ${objective.title} del usuario ${user.email} no ha subido una foto en las últimas 24 horas.`
-            // );
-            await addNewEmptyFile(user.userId, objective.objectiveId);
+          if (files) {
+            const lastFile = files[0];
+
+            const lastFileDate = dayjs(lastFile.createdAt);
+
+            const dateToCompare = dayjs().subtract(1, "day");
+
+            if (dateToCompare.isSame(lastFileDate, "day")) {
+              // console.log(
+              //   `El objetivo ${objective.title} del usuario ${user.email} no ha subido una foto en las últimas 24 horas.`
+              // );
+              await addNewEmptyFile(user.userId, objective.objectiveId);
+            } else {
+              // console.log(
+              //   `El objetivo ${objective.title} del usuario ${user.email} ha subido una foto en las últimas 24 horas.`
+              // );
+            }
           } else {
-            // console.log(
-            //   `El objetivo ${objective.title} del usuario ${user.email} ha subido una foto en las últimas 24 horas.`
-            // );
-          }
-        } else {
-          const dateToCompare = dayjs().subtract(1, "day");
-          const startingDate = dayjs(objective.startingDate, "DD/MM/YYYY");
+            const dateToCompare = dayjs().subtract(1, "day");
+            const startingDate = dayjs(objective.startingDate, "DD/MM/YYYY");
 
-          if (dateToCompare.isSame(startingDate, "day")) {
-            // console.log(
-            //   `El objetivo ${objective.title} del usuario ${user.email} no ha subido una foto en las últimas 24 horas.`
-            // );
-            await addNewEmptyFile(user.userId, objective.objectiveId);
+            if (dateToCompare.isSame(startingDate, "day")) {
+              // console.log(
+              //   `El objetivo ${objective.title} del usuario ${user.email} no ha subido una foto en las últimas 24 horas.`
+              // );
+              await addNewEmptyFile(user.userId, objective.objectiveId);
+            }
           }
         }
       }

@@ -17,10 +17,10 @@ app.use("/api/create-timelapse", timelapseRoutes);
 app.use("/api/users", usersRouter);
 app.use("/api/objectives", objectivesRouter);
 
-// cron.schedule("58 23 * * *", async (now) => {
-//   console.log("Ejecutando una inspeccion de los archivos a la hora: ", now);
-//   await checkLastFile();
-// });
+cron.schedule("58 * * * *", async (now) => {
+  console.log("Ejecutando una inspeccion de los archivos a la hora: ", now);
+  await checkLastFile();
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
